@@ -17,6 +17,10 @@
         else return String.fromCharCode(rnd + 65);
     }
     
+    function getInterval(speed){
+        return (Math.abs(speed - 10) * 20);
+    }
+    
     $.fn.rot13 = function() {
         this.each(function() {
             $(this).text($(this).text().replace(/[a-z0-9]/ig, function(chr) {
@@ -30,7 +34,8 @@
         return this;
     };
     
-    $.fn.scrambledWriter = function() {
+    $.fn.scrambledWriter = function(options) {
+        var settings = $.extend({speed: 5}, options);
         this.each(function() {
             var $ele = $(this), str = $ele.text(), progress = 0, replace = /[^\s]/g,
                 random = randomAlphaNum, inc = 3;
@@ -39,24 +44,26 @@
                 $ele.text(str.substring(0, progress) + str.substring(progress, str.length).replace(replace, random));
                 progress += inc
                 if (progress >= str.length + inc) clearInterval(timer);
-            }, 100);
+            }, getInterval(settings.speed));
         });
         return this;
     };
     
-    $.fn.typewriter = function() {
+    $.fn.typewriter = function(options) {
+        var settings = $.extend({speed: 5}, options);
         this.each(function() {
             var $ele = $(this), str = $ele.text(), progress = 0;
             $ele.text('');
             var timer = setInterval(function() {
                 $ele.text(str.substring(0, progress++) + (progress & 1 ? '_' : ''));
                 if (progress >= str.length) clearInterval(timer);
-            }, 100);
+            }, getInterval(settings.speed));
         });
         return this;
     };
     
-    $.fn.unscramble = function() {
+    $.fn.unscramble = function(options) {
+        var settings = $.extend({speed: 5}, options);
         this.each(function() {
             var $ele = $(this), str = $ele.text(), replace = /[^\s]/,
                 state = [], choose = [], reveal = 25, random = randomAlphaNum;
@@ -81,8 +88,8 @@
                 }
                 for (i = 0; i < choose.length; i++) state[choose[i]] = random();
                 $ele.text(state.join(''));
-                if (choose.length == 0) clearInterval(timer);
-            }, 100);
+                if (choose.length === 0) clearInterval(timer);
+            }, getInterval(settings.speed));
         });
         return this;
     };
